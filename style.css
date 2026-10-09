@@ -33,6 +33,8 @@ textarea:focus { outline: 2px solid var(--primary); outline-offset: -1px; }
 .preview { white-space: pre-wrap; word-break: break-all; overflow: auto; max-height: 520px; resize: none; }
 .preview .placeholder { color: var(--muted); }
 #output { min-height: 180px; }
+#output-section { scroll-margin-top: 12px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 .stat { color: var(--muted); font-size: .85rem; margin-top: 4px; }
 .btns, .opts { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .btn { font: inherit; font-size: .9rem; border: 1px solid var(--border); background: var(--panel); color: var(--text); padding: 6px 14px; border-radius: 7px; cursor: pointer; }

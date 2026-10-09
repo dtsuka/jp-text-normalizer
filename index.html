@@ -24,6 +24,7 @@
           <div class="btns">
             <button type="button" id="btn-sample" class="btn ghost">サンプルを挿入</button>
             <button type="button" id="btn-clear" class="btn ghost">クリア</button>
+            <button type="button" id="btn-normalize-top" class="btn primary" disabled aria-controls="output">正規化する</button>
           </div>
         </div>
         <textarea id="input" spellcheck="false" placeholder="ここにチェックしたいテキストを貼り付けてください（PDF・Webページ・他のアプリなど、どこからコピーしたものでも）"></textarea>
@@ -76,16 +77,16 @@
       <p class="stat" id="issues-note"></p>
     </section>
 
-    <section class="panel">
+    <section class="panel" id="output-section">
       <div class="section-head">
-        <h2>正規化したテキスト</h2>
+        <h2 id="output-heading">正規化したテキスト</h2>
         <div class="btns">
-          <button type="button" id="btn-normalize" class="btn primary">正規化する</button>
+          <button type="button" id="btn-normalize" class="btn primary" disabled aria-controls="output">正規化する</button>
           <button type="button" id="btn-copy" class="btn" disabled>コピー</button>
           <button type="button" id="btn-to-input" class="btn ghost" disabled>入力欄に戻す</button>
         </div>
       </div>
-      <textarea id="output" readonly spellcheck="false" placeholder="「正規化する」を押すと、ここに結果が表示されます"></textarea>
+      <textarea id="output" aria-labelledby="output-heading" readonly spellcheck="false" placeholder="「正規化する」を押すと、ここに結果が表示されます"></textarea>
       <div class="stat" id="output-stat"></div>
     </section>
 

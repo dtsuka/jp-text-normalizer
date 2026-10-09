@@ -75,6 +75,7 @@
     var text = input.value;
     state.result = N.analyze(text, { detectIdeographicSpace: state.detectIdeographicSpace });
     $('input-stat').textContent = state.result.length.toLocaleString() + ' 文字';
+    updateButtons();
     renderPreview(text);
     renderCategories();
     renderTable();
@@ -228,7 +229,20 @@
     $('btn-copy').disabled = !out;
     $('btn-to-input').disabled = !out;
     state.outputFresh = true;
-    if (!silent) output.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (!silent) revealOutput();
+  }
+
+  // 出力欄までスクロールしてフォーカスを移す（動きを減らす設定ではスクロールアニメなし）
+  function revealOutput() {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    $('output-section').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    try { output.focus({ preventScroll: true }); } catch (e) { output.focus(); }
+  }
+
+  function updateButtons() {
+    var empty = !input.value;
+    $('btn-normalize').disabled = empty;
+    $('btn-normalize-top').disabled = empty;
   }
 
   function toast(msg) {
@@ -319,7 +333,11 @@
     $('btn-copy').disabled = true; $('btn-to-input').disabled = true;
     state.outputFresh = false; analyze(); input.focus();
   });
-  $('btn-normalize').addEventListener('click', function () { doNormalize(false); });
+  $('btn-normalize').addEventListener('click', function () { clearTimeout(timer); analyze(); doNormalize(false); });
+  $('btn-normalize-top').addEventListener('click', function () {
+    // 入力直後（解析待ち）でも最新のテキストで正規化する
+    clearTimeout(timer); analyze(); doNormalize(false);
+  });
   $('btn-copy').addEventListener('click', copyOutput);
   $('btn-to-input').addEventListener('click', function () {
     input.value = output.value; state.outputFresh = false; analyze();
