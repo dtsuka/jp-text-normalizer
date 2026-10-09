@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PDFコピペ文字チェッカー｜康煕部首・結合濁点などを検出・正規化</title>
+  <meta name="description" content="PDFからコピーした日本語テキストに紛れ込む康煕部首・CJK部首補助・結合濁点・互換漢字・不可視文字などを検出し、正規化します。処理はすべてブラウザ内で完結します。">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <h1>PDFコピペ文字チェッカー</h1>
+      <p class="lead">PDFからコピーした日本語に紛れ込む「見た目は同じでも別の文字」（康煕部首・CJK部首補助・結合濁点・互換漢字・ゼロ幅文字など）を検出して、正規化します。<br>
+        <small>入力したテキストは外部に送信されません（すべてブラウザ内で処理）。</small></p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="panel io">
+      <div class="io-col">
+        <div class="io-head">
+          <label for="input" class="io-title">入力テキスト</label>
+          <div class="btns">
+            <button type="button" id="btn-sample" class="btn ghost">サンプルを挿入</button>
+            <button type="button" id="btn-clear" class="btn ghost">クリア</button>
+          </div>
+        </div>
+        <textarea id="input" spellcheck="false" placeholder="ここにPDFからコピーしたテキストを貼り付けてください"></textarea>
+        <div class="stat" id="input-stat">0 文字</div>
+      </div>
+      <div class="io-col">
+        <div class="io-head">
+          <span class="io-title">プレビュー（問題のある文字をハイライト）</span>
+          <span class="legend"><span class="sw sev-error"></span>要修正 <span class="sw sev-warning"></span>要確認 <span class="sw sev-info"></span>参考</span>
+        </div>
+        <div id="preview" class="preview" aria-live="polite"><span class="placeholder">ハイライト結果がここに表示されます。マウスを重ねると詳細が出ます。</span></div>
+        <div class="stat" id="summary-line">問題は見つかっていません</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <h2>検出結果（カテゴリ別）</h2>
+        <div class="opts">
+          <label class="chk"><input type="checkbox" id="opt-ideo-space"> 全角スペース（U+3000）も検出する</label>
+          <label class="chk"><input type="checkbox" id="opt-suggest"> 「要確認」の提案も変換に適用する</label>
+          <label class="chk"><input type="checkbox" id="opt-only-found" checked> 検出されたカテゴリのみ表示</label>
+        </div>
+      </div>
+      <p class="hint">チェックの入ったカテゴリが「正規化」で変換されます。変換先のない指摘（私用領域など）は表示のみです。</p>
+      <div id="categories" class="categories"></div>
+      <div class="cat-actions">
+        <button type="button" class="btn small ghost" id="btn-cat-all">すべて変換対象にする</button>
+        <button type="button" class="btn small ghost" id="btn-cat-default">既定に戻す</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <h2>指摘一覧</h2>
+        <div class="opts">
+          <label class="chk">カテゴリ:
+            <select id="filter-cat"><option value="">すべて</option></select>
+          </label>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="issues">
+          <thead>
+            <tr><th>位置</th><th>文字</th><th>コードポイント</th><th>Unicode名 / 一般カテゴリ</th><th>種類</th><th>変換後</th><th>説明</th></tr>
+          </thead>
+          <tbody id="issues-body"><tr class="empty"><td colspan="7">まだ指摘はありません</td></tr></tbody>
+        </table>
+      </div>
+      <p class="stat" id="issues-note"></p>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <h2>正規化したテキスト</h2>
+        <div class="btns">
+          <button type="button" id="btn-normalize" class="btn primary">正規化する</button>
+          <button type="button" id="btn-copy" class="btn" disabled>コピー</button>
+          <button type="button" id="btn-to-input" class="btn ghost" disabled>入力欄に戻す</button>
+        </div>
+      </div>
+      <textarea id="output" readonly spellcheck="false" placeholder="「正規化する」を押すと、ここに結果が表示されます"></textarea>
+      <div class="stat" id="output-stat"></div>
+    </section>
+
+    <section class="panel about">
+      <h2>検出する文字について</h2>
+      <div id="about-list" class="about-list"></div>
+    </section>
+  </main>
+
+  <footer class="wrap footer">
+    <p>Unicodeデータ: Unicode Character Database（© Unicode, Inc.）。オフラインでも動作します。</p>
+  </footer>
+
+  <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="unicode-data.js"></script>
+  <script src="normalize.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
