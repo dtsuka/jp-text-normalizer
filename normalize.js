@@ -1,5 +1,6 @@
 /*!
- * PDF由来の紛らわしい文字 検出・正規化モジュール
+ * 日本語テキストに紛れ込む紛らわしいUnicode文字の検出・正規化モジュール
+ * （PDF・Webページ・他のアプリ・OCRなどからのコピー＆ペーストで混入するもの）
  * ブラウザ: <script src="unicode-data.js"> の後に読み込むと window.PdfTextNormalizer が使えます。
  * Node.js: const N = require('./normalize.js');
  */
@@ -45,9 +46,9 @@
     { id: 'enclosed', label: '囲み文字・組文字・単位記号', severity: 'info', defaultOn: false,
       desc: '①, ㈱, ㍿, ㌔, ㎡, № など。変換をオンにするとNFKCで展開します（①→1, ㍿→株式会社）。' },
     { id: 'ligature', label: '欧文合字', severity: 'error', defaultOn: true,
-      desc: 'ﬁ, ﬂ, ﬀ など（U+FB00–FB06）。英文PDFでよく混入します。fi, fl に分解します。' },
+      desc: 'ﬁ, ﬂ, ﬀ など（U+FB00–FB06）。欧文のPDFや組版済み文書からのコピーでよく混入します。fi, fl に分解します。' },
     { id: 'vertical', label: '縦書き用・小字形の互換文字', severity: 'warning', defaultOn: true,
-      desc: '縦書きPDFからコピーした ︵︶︒︑︙ など（U+FE10–FE19, FE30–FE6B）。通常の記号に変換します。' },
+      desc: '縦書きの文書や電子書籍などからコピーした ︵︶︒︑︙ など（U+FE10–FE19, FE30–FE6B）。通常の記号に変換します。' },
     { id: 'simplified', label: '簡体字（中国語）', severity: 'warning', defaultOn: false,
       desc: '日本語では使わない簡化字（这, 说, 门, 车…）。日本の字体を提案します。変換をオンにすると提案どおり置換します。' },
     { id: 'traditional', label: '繁体字・旧字体', severity: 'warning', defaultOn: false,
@@ -515,7 +516,7 @@
     '【不可視文字】ゼロ\u200B幅\u200Bスペース、\uFEFFBOM、ソフト\u00ADハイフン',
     '【特殊な空白】価格:\u00A01,000円\u2002（NBSP・EN SPACE）',
     '【半角カナ】ｶﾞｲﾄﾞﾌﾞｯｸ｡ﾊﾟｿｺﾝ',
-    '【全角英数】ＰＤＦ２０２６年',
+    '【全角英数】ＡＢＣ２０２６年',
     '【囲み・組文字】①②、㈱ABC、㍿、㌔、㎡、№1',
     '【合字】ﬁle ofﬁce workﬂow',
     '【縦書き用】︵縦書き︶︒続く︙',
